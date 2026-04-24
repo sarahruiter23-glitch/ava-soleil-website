@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading... — Ava Soleil</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .post-hero {
+    padding: 140px 80px 60px;
+    background: var(--white);
+    max-width: 800px; margin: 0 auto;
+    text-align: center;
+  }
+  .post-category {
+    display: inline-block; margin-bottom: 22px;
+    background: var(--parchment); color: var(--rose);
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 7px 18px; border-radius: 20px; font-weight: 500;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .post-category:hover { background: var(--blush); }
+  .post-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 5vw, 58px); font-weight: 300; line-height: 1.1;
+    color: var(--brown); margin-bottom: 24px;
+  }
+  .post-excerpt {
+    font-size: 18px; line-height: 1.7; color: var(--brown-mid);
+    max-width: 600px; margin: 0 auto 32px;
+  }
+  .post-meta {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brown-light);
+  }
+  .post-meta-dot { color: var(--blush); }
+
+  .post-banner {
+    width: 100%; max-height: 480px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 120px;
+  }
+
+  .post-body-wrap {
+    max-width: 720px; margin: 0 auto;
+    padding: 60px 80px 80px;
+    background: var(--white);
+  }
+
+  .post-body { font-size: 17px; line-height: 1.85; color: var(--brown-mid); }
+  .post-body h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px; font-weight: 400; color: var(--brown);
+    margin: 44px 0 16px; line-height: 1.2;
+  }
+  .post-body h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 500; color: var(--brown);
+    margin: 30px 0 12px;
+  }
+  .post-body p { margin-bottom: 22px; }
+  .post-body strong { color: var(--brown); font-weight: 500; }
+  .post-body em { font-style: italic; color: var(--rose-deep); }
+  .post-body ul, .post-body ol { padding-left: 24px; margin-bottom: 22px; }
+  .post-body li { margin-bottom: 10px; }
+  .post-body blockquote {
+    border-left: 3px solid var(--blush); padding: 16px 24px;
+    margin: 28px 0; background: var(--cream); border-radius: 0 12px 12px 0;
+    font-style: italic; color: var(--brown);
+  }
+
+  /* SHARE + BACK */
+  .post-actions {
+    max-width: 720px; margin: 0 auto;
+    padding: 0 80px 40px;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--parchment); padding-top: 32px;
+  }
+  .back-link {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--brown-mid); text-decoration: none;
+    display: flex; align-items: center; gap: 8px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--rose); }
+  .share-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brown-light); }
+
+  /* RELATED */
+  .related-section { padding: 70px 80px; background: var(--cream); }
+  .related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
+
+  .not-found {
+    padding: 160px 80px; text-align: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--brown-mid);
+  }
+
+  @media (max-width: 900px) {
+    .post-hero, .post-body-wrap, .post-actions { padding-left: 24px; padding-right: 24px; }
+    .related-section { padding: 50px 24px; }
+    .related-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<div id="post-root"></div>
+<div id="footer-root"></div>
+
+<script src="js/app.js"></script>
+<script>
+  document.getElementById('nav-root').innerHTML    = renderNav('Blog');
+  document.getElementById('footer-root').innerHTML = renderFooter();
+
+  const slug = new URLSearchParams(window.location.search).get('slug');
+
+  loadPosts().then(posts => {
+    const post = posts.find(p => p.slug === slug);
+    const root = document.getElementById('post-root');
+
+    if (!post) {
+      root.innerHTML = `<div class="not-found"><em>Post not found.</em><br><br><a href="blog.html" class="btn-primary" style="font-size:12px">← Back to Blog</a></div>`;
+      return;
+    }
+
+    document.title = `${post.title} — Ava Soleil`;
+
+    const related = posts.filter(p => p.slug !== post.slug && p.category === post.category).slice(0, 3);
+    const otherRelated = related.length < 3
+      ? posts.filter(p => p.slug !== post.slug && !related.includes(p)).slice(0, 3 - related.length)
+      : [];
+    const relatedPosts = [...related, ...otherRelated].slice(0, 3);
+
+    root.innerHTML = `
+      <article>
+        <div class="post-hero">
+          <a href="blog.html?cat=${encodeURIComponent(post.category)}" class="post-category">${post.category}</a>
+          <h1 class="post-title">${post.title}</h1>
+          <p class="post-excerpt">${post.excerpt}</p>
+          <div class="post-meta">
+            <span>${post.date}</span>
+            <span class="post-meta-dot">·</span>
+            <span>${post.readTime}</span>
+          </div>
+        </div>
+
+        <div class="post-banner" style="background:${post.gradient}">
+          <span>${post.emoji}</span>
+        </div>
+
+        <div class="post-body-wrap">
+          <div class="post-body">${post.body}</div>
+        </div>
+
+        <div class="post-actions">
+          <a href="blog.html" class="back-link">← Back to All Articles</a>
+          <span class="share-label">Share this article ✦</span>
+        </div>
+      </article>
+
+      ${relatedPosts.length ? `
+      <section class="related-section">
+        <div class="section-eyebrow">Keep Reading</div>
+        <h2 class="section-title">More <em>for you</em></h2>
+        <div class="related-grid">${relatedPosts.map(p => formatCard(p)).join('')}</div>
+      </section>` : ''}
+
+      ${renderEmailSection()}
+    `;
+  });
+</script>
+</body>
+</html>

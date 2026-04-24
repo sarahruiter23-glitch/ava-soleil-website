@@ -1,0 +1,158 @@
+# AVA SOLEIL — AUTOMATED BLOG PUBLISHING GUIDE
+# ================================================
+# This file explains exactly how to set up automatic blog publishing.
+# Claude writes posts → GitHub saves them → Netlify publishes the site.
+# YOU DO NOTHING except monitor.
+
+# ─────────────────────────────────────────────────────────────
+# STEP 1: HOST THE WEBSITE FREE ON NETLIFY
+# ─────────────────────────────────────────────────────────────
+
+1. Go to github.com → create a free account
+2. Click "New Repository" → name it "ava-soleil-website" → set to Public → Create
+3. Upload the "ava-soleil" folder contents (all the HTML/CSS/JS/data files)
+4. Go to netlify.com → sign up free
+5. Click "Add new site" → "Import an existing project" → Connect to GitHub
+6. Select your "ava-soleil-website" repo → click Deploy
+7. Your site is LIVE at a free URL like: ava-soleil-website.netlify.app
+8. (Optional) Buy avasoleil.com on Namecheap (~$12/yr) and connect it in Netlify settings
+
+# ─────────────────────────────────────────────────────────────
+# STEP 2: GET A GITHUB API TOKEN (so automation can publish)
+# ─────────────────────────────────────────────────────────────
+
+1. Go to github.com → click your profile photo → Settings
+2. Scroll to bottom → "Developer settings" → "Personal access tokens" → "Tokens (classic)"
+3. Click "Generate new token (classic)"
+4. Name: "Ava Blog Automation"
+5. Check the box: "repo" (full control of private repositories)
+6. Click "Generate token"
+7. COPY IT NOW — you only see it once. Save it somewhere safe.
+
+# ─────────────────────────────────────────────────────────────
+# STEP 3: GET YOUR ANTHROPIC API KEY (for Claude to write posts)
+# ─────────────────────────────────────────────────────────────
+
+1. Go to console.anthropic.com → sign up
+2. Go to "API Keys" → "Create Key"
+3. Copy your API key and save it
+
+Cost: approximately $0.03–0.10 per blog post generated. Minimal.
+
+# ─────────────────────────────────────────────────────────────
+# STEP 4: SET UP MAKE.COM AUTOMATION
+# ─────────────────────────────────────────────────────────────
+
+Go to make.com → create free account → "Create a new scenario"
+
+Build this flow (drag and drop — no coding):
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    MAKE.COM WORKFLOW                            │
+│                                                                 │
+│  [1. SCHEDULE]                                                  │
+│  Trigger: Every Monday at 9am                                   │
+│                                                                 │
+│  [2. HTTP REQUEST — Claude API]                                 │
+│  URL: https://api.anthropic.com/v1/messages                     │
+│  Method: POST                                                   │
+│  Headers:                                                       │
+│    x-api-key: YOUR_ANTHROPIC_API_KEY                           │
+│    anthropic-version: 2023-06-01                               │
+│    content-type: application/json                              │
+│  Body (copy this exactly):                                      │
+│  {                                                              │
+│    "model": "claude-opus-4-5",                                 │
+│    "max_tokens": 4000,                                          │
+│    "messages": [{                                               │
+│      "role": "user",                                            │
+│      "content": "You are Ava Soleil, a wellness blogger...      │
+│      [see PROMPT section below]"                                │
+│    }]                                                           │
+│  }                                                              │
+│                                                                 │
+│  [3. JSON PARSE]                                                │
+│  Extract content[0].text from the response                      │
+│                                                                 │
+│  [4. HTTP REQUEST — GitHub API]                                 │
+│  URL: https://api.github.com/repos/YOUR_USERNAME/               │
+│       ava-soleil-website/contents/data/posts.json              │
+│  Method: GET                                                    │
+│  Headers: Authorization: token YOUR_GITHUB_TOKEN               │
+│                                                                 │
+│  [5. PARSE existing posts.json]                                 │
+│  Decode the base64 content from GitHub                          │
+│  Parse JSON → get current array                                 │
+│                                                                 │
+│  [6. ARRAY MERGE]                                               │
+│  Prepend new post to beginning of existing posts array          │
+│                                                                 │
+│  [7. HTTP REQUEST — GitHub API (write)]                         │
+│  URL: same as step 4                                            │
+│  Method: PUT                                                    │
+│  Body: {                                                        │
+│    "message": "Auto-publish: [post title]",                     │
+│    "content": [base64 encoded updated JSON],                    │
+│    "sha": [sha from step 4 GET response]                        │
+│  }                                                              │
+│                                                                 │
+│  [8. EMAIL NOTIFICATION]                                        │
+│  Send yourself a summary of what was published                  │
+└─────────────────────────────────────────────────────────────────┘
+
+When step 7 commits to GitHub → Netlify detects the change → 
+rebuilds and deploys automatically. Usually live within 60 seconds.
+
+# ─────────────────────────────────────────────────────────────
+# THE CLAUDE PROMPT (paste into step 2 above)
+# ─────────────────────────────────────────────────────────────
+
+You are Ava Soleil, a science-backed wellness blogger covering biohacking, longevity, and holistic health for women. Your voice is warm, knowledgeable, and approachable — like a brilliant friend who happens to know a lot about science.
+
+Write ONE new blog post for this week. The topic should be trending and relevant to wellness, biohacking, or longevity in 2025.
+
+Return ONLY a valid JSON object (no markdown, no explanation) in this exact format:
+{
+  "slug": "unique-url-friendly-slug-here",
+  "title": "The Full Blog Post Title Here",
+  "category": "Biohacking",
+  "date": "Month Day, Year",
+  "readTime": "X min read",
+  "excerpt": "One compelling sentence that makes someone want to read more.",
+  "emoji": "🧬",
+  "gradient": "linear-gradient(135deg, #E8D4C0, #C9967A)",
+  "body": "<p>Full HTML blog post content here. Use p, h2, h3, strong, em tags. Minimum 800 words. Science-backed. Cite research. End with practical takeaways.</p>"
+}
+
+Category must be one of: Biohacking, Longevity, Sleep, Nutrition, Holistic Health, Mental Performance
+
+For gradient, choose warm complementary colors that match the topic mood.
+
+# ─────────────────────────────────────────────────────────────
+# ADDING AVA'S IMAGES
+# ─────────────────────────────────────────────────────────────
+
+1. Create an "images" folder in your GitHub repo
+2. Upload your Midjourney images of Ava:
+   - ava-hero.jpg (portrait, facing camera, shoulders up)
+   - ava-about.jpg (lifestyle shot, more relaxed)
+   - ava-og.jpg (square crop for social sharing)
+
+3. In index.html, replace:
+   <div class="hero-avatar-placeholder">A</div>
+   With:
+   <img src="images/ava-hero.jpg" alt="Ava Soleil">
+
+4. Do the same in about.html with ava-about.jpg
+
+# ─────────────────────────────────────────────────────────────
+# TOTAL MONTHLY COST
+# ─────────────────────────────────────────────────────────────
+
+GitHub:           FREE
+Netlify hosting:  FREE
+Make.com (free tier, 1000 ops/month): FREE
+Claude API (4 posts/month):           ~$0.20–0.40
+Custom domain (optional):             ~$1/month
+
+TOTAL: Essentially FREE (under $1/month with API costs)

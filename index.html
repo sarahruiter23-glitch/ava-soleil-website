@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ava Soleil — Wellness, Biohacking & Longevity</title>
+<meta name="description" content="Science-backed wellness, biohacking insights, and longevity rituals for women who want to thrive at every age.">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 72px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 72% 40%, rgba(232,201,181,0.32) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 60px 120px 80px; position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 26px;
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .hero-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--rose); }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(50px, 6vw, 80px); font-weight: 300; line-height: 1.05;
+    color: var(--brown); margin-bottom: 28px;
+    animation: fadeUp 0.7s ease 0.22s both;
+  }
+  .hero-title em { font-style: italic; color: var(--rose-deep); }
+  .hero-sub {
+    font-size: 16px; line-height: 1.8; color: var(--brown-mid);
+    max-width: 410px; margin-bottom: 46px;
+    animation: fadeUp 0.7s ease 0.36s both;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 28px;
+    animation: fadeUp 0.7s ease 0.48s both;
+  }
+  .hero-right { position: relative; overflow: hidden; background: var(--parchment); }
+  .hero-img-wrap {
+    width: 100%; height: 100%; min-height: 100vh;
+    background: linear-gradient(160deg, #F0E6D8 0%, #E0CDB8 50%, #D0B49A 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; position: relative;
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;
+  }
+  .hero-avatar-placeholder {
+    width: 160px; height: 160px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blush), var(--rose));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 60px;
+    color: var(--white); font-weight: 300;
+    box-shadow: 0 20px 60px rgba(169,113,86,0.28);
+  }
+  .hero-img-label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--brown-mid); opacity: 0.55;
+  }
+  .hero-stat-bar {
+    position: absolute; bottom: 36px; left: -60px;
+    background: rgba(255,253,249,0.96); backdrop-filter: blur(10px);
+    border-radius: 16px; padding: 18px 28px; display: flex; gap: 36px;
+    box-shadow: 0 8px 40px rgba(46,27,14,0.1); z-index: 3; white-space: nowrap;
+    animation: fadeUp 0.7s ease 0.6s both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500;
+    color: var(--brown); display: block;
+  }
+  .stat-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); }
+
+  /* ── ABOUT STRIP ── */
+  .about-strip {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--white);
+  }
+  .about-img-side {
+    background: linear-gradient(145deg, var(--parchment), var(--blush));
+    min-height: 520px; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .about-img-side img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .about-img-placeholder {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 44px; color: var(--white);
+  }
+  .about-content { padding: 80px 70px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+  .about-text { font-size: 16px; line-height: 1.8; color: var(--brown-mid); margin-bottom: 18px; }
+  .pillars { display: flex; flex-direction: column; gap: 14px; margin: 30px 0; }
+  .pillar {
+    display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px;
+    background: var(--cream); border-radius: 12px; border-left: 3px solid var(--blush);
+    transition: border-color 0.25s, transform 0.2s;
+  }
+  .pillar:hover { border-left-color: var(--rose); transform: translateX(4px); }
+  .pillar-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .pillar-text strong { display: block; font-size: 14px; font-weight: 500; color: var(--brown); margin-bottom: 3px; }
+  .pillar-text span { font-size: 13px; color: var(--brown-light); line-height: 1.5; }
+
+  /* ── QUOTE ── */
+  .quote-section { padding: 70px 80px; background: var(--parchment); text-align: center; }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif; font-size: 90px; line-height: 0.5;
+    color: var(--blush); display: block; margin-bottom: 18px;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 2.8vw, 34px); font-weight: 300; font-style: italic;
+    color: var(--brown); line-height: 1.5; max-width: 660px; margin: 0 auto 20px;
+  }
+  .quote-attr { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose); }
+
+  /* ── BLOG PREVIEW ── */
+  .blog-preview { padding: 100px 80px; background: var(--cream); }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 56px; }
+  .view-all {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--rose); text-decoration: none; border-bottom: 1px solid var(--blush);
+    padding-bottom: 2px; transition: border-color 0.25s;
+  }
+  .view-all:hover { border-color: var(--rose); }
+  .blog-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px; }
+
+  /* ── TOPICS ── */
+  .topics-section { padding: 90px 80px; background: var(--white); }
+  .topics-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 52px; }
+  .topic-card {
+    padding: 32px 28px; background: var(--cream); border-radius: 18px;
+    text-decoration: none; color: inherit; transition: transform 0.3s, box-shadow 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .topic-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(to right, var(--blush), var(--rose));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+  }
+  .topic-card:hover::before { transform: scaleX(1); }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(46,27,14,0.08); }
+  .topic-icon { font-size: 34px; margin-bottom: 18px; display: block; }
+  .topic-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 500; color: var(--brown); margin-bottom: 8px; }
+  .topic-desc { font-size: 13px; line-height: 1.65; color: var(--brown-mid); margin-bottom: 16px; }
+  .topic-count { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); }
+
+  @media (max-width: 900px) {
+    .hero, .about-strip { grid-template-columns: 1fr; }
+    .hero-right { min-height: 50vh; }
+    .hero-stat-bar { left: 50%; transform: translateX(-50%); bottom: 20px; }
+    .hero-left { padding: 60px 24px 80px; }
+    .about-content { padding: 48px 24px; }
+    .blog-preview, .topics-section, .quote-section { padding: 60px 24px; }
+    .blog-grid, .topics-grid { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="nav-root"></div>
+<div id="ticker-root"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Wellness · Biohacking · Longevity</div>
+    <h1 class="hero-title">Live longer.<br>Feel <em>radically</em><br>alive.</h1>
+    <p class="hero-sub">Science-backed wellness, biohacking insights, and longevity rituals — curated for women who refuse to settle for average health.</p>
+    <div class="hero-actions">
+      <a href="blog.html" class="btn-primary">Explore the Blog</a>
+      <a href="#newsletter" class="btn-ghost">Get weekly rituals →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <!-- REPLACE THE DIV BELOW WITH: <img src="images/ava-hero.jpg" alt="Ava Soleil"> -->
+      <div class="hero-avatar-placeholder">A</div>
+      <span class="hero-img-label">Add your Midjourney image of Ava here</span>
+    </div>
+    <div class="hero-stat-bar">
+      <div class="stat"><span class="stat-num">48K</span><span class="stat-label">Readers</span></div>
+      <div class="stat"><span class="stat-num" id="post-count">—</span><span class="stat-label">Articles</span></div>
+      <div class="stat"><span class="stat-num">3×</span><span class="stat-label">Weekly</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-strip">
+  <div class="about-img-side">
+    <!-- REPLACE WITH: <img src="images/ava-about.jpg" alt="Ava Soleil"> -->
+    <div class="about-img-placeholder">A</div>
+  </div>
+  <div class="about-content">
+    <div class="section-eyebrow">Meet Ava</div>
+    <h2 class="section-title">Wellness isn't a trend.<br>It's a <em>practice.</em></h2>
+    <p class="about-text">I'm Ava Soleil — a wellness researcher, biohacking enthusiast, and longevity obsessive dedicated to translating cutting-edge science into daily rituals you can actually follow.</p>
+    <p class="about-text">This space is for women who want more than surface-level health advice.</p>
+    <div class="pillars">
+      <div class="pillar"><span class="pillar-icon">🧬</span><div class="pillar-text"><strong>Biohacking & Longevity</strong><span>Science-backed tools to extend your healthspan.</span></div></div>
+      <div class="pillar"><span class="pillar-icon">🌿</span><div class="pillar-text"><strong>Holistic Wellness</strong><span>Mind, body, gut — the interconnected pillars of how you feel.</span></div></div>
+      <div class="pillar"><span class="pillar-icon">⚡</span><div class="pillar-text"><strong>Energy & Performance</strong><span>Sleep, nutrition, and recovery protocols that move the needle.</span></div></div>
+    </div>
+    <a href="about.html" class="btn-primary" style="align-self:flex-start;">Read My Story</a>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <span class="quote-mark">"</span>
+  <p class="quote-text">Your body is the most sophisticated technology you'll ever own. Learn how to use it.</p>
+  <span class="quote-attr">— Ava Soleil</span>
+</section>
+
+<!-- BLOG PREVIEW -->
+<section class="blog-preview">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">From the Blog</div>
+      <h2 class="section-title" style="margin-bottom:0">Latest <em>Insights</em></h2>
+    </div>
+    <a href="blog.html" class="view-all">View All Articles →</a>
+  </div>
+  <div class="blog-grid" id="home-posts">
+    <div style="padding:40px;color:var(--brown-light);font-size:14px;">Loading posts...</div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section class="topics-section">
+  <div class="section-eyebrow">Explore by Topic</div>
+  <h2 class="section-title">Find what <em>speaks to you</em></h2>
+  <div class="topics-grid">
+    <a href="blog.html?cat=Biohacking" class="topic-card"><span class="topic-icon">🧬</span><div class="topic-name">Biohacking</div><p class="topic-desc">Cold therapy, red light, peptides — the frontier of self-optimization.</p><span class="topic-count">View Articles</span></a>
+    <a href="blog.html?cat=Longevity" class="topic-card"><span class="topic-icon">⏳</span><div class="topic-name">Longevity</div><p class="topic-desc">The science of aging well. NAD+, senescence, and beyond.</p><span class="topic-count">View Articles</span></a>
+    <a href="blog.html?cat=Holistic+Health" class="topic-card"><span class="topic-icon">🌿</span><div class="topic-name">Holistic Health</div><p class="topic-desc">Nervous system regulation and whole-body wellness protocols.</p><span class="topic-count">View Articles</span></a>
+    <a href="blog.html?cat=Nutrition" class="topic-card"><span class="topic-icon">🍽️</span><div class="topic-name">Nutrition</div><p class="topic-desc">Metabolic health, gut microbiome, and functional foods.</p><span class="topic-count">View Articles</span></a>
+    <a href="blog.html?cat=Sleep" class="topic-card"><span class="topic-icon">🌙</span><div class="topic-name">Sleep & Recovery</div><p class="topic-desc">Circadian biology and evidence-based recovery tools.</p><span class="topic-count">View Articles</span></a>
+    <a href="blog.html?cat=Mental+Performance" class="topic-card"><span class="topic-icon">🧠</span><div class="topic-name">Mental Performance</div><p class="topic-desc">Stress physiology and the mind-body connection.</p><span class="topic-count">View Articles</span></a>
+  </div>
+</section>
+
+<div id="email-root"></div>
+<div id="footer-root"></div>
+
+<script src="js/app.js"></script>
+<script>
+  document.getElementById('nav-root').innerHTML    = renderNav('Home');
+  document.getElementById('ticker-root').innerHTML = renderTicker();
+  document.getElementById('email-root').innerHTML  = renderEmailSection();
+  document.getElementById('footer-root').innerHTML = renderFooter();
+
+  loadPosts().then(posts => {
+    document.getElementById('post-count').textContent = posts.length + '+';
+    const grid = document.getElementById('home-posts');
+    const show = posts.slice(0, 3);
+    grid.innerHTML = show.map((p, i) => formatCard(p, i === 0)).join('');
+  });
+</script>
+</body>
+</html>
